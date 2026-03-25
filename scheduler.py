@@ -1,6 +1,8 @@
 import logging
 import time
-from datetime import datetime
+from datetime import datetime, date
+from ai_summary import load_latest_summary
+
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
@@ -150,7 +152,18 @@ def start_scheduler() -> BackgroundScheduler:
         name="Daily AI summary generation",
         replace_existing=True,
     )
+    # Generate today's summary on startup if it hasn't been done yet
 
+    latest = load_latest_summary()
+    today = date.today().strftime("%Y-%m-%d")
+    if latest is None or latest["summary_date"] != today:
+        logger.info("No summary for today found on startup — generating now.")
+        _scheduler.add_job(
+            func=generate_daily_summary,
+            trigger="date",  # run once immediately
+            id="startup_summary",
+            name="Startup summary catch-up",
+    )
     _scheduler.start()
 
     logger.info(
