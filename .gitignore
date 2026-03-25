@@ -1,0 +1,26 @@
+# Secrets
+.env
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Database file 
+*.db
+
+# Virtual environment folder
+venv/
+
+# Large data files
+data/historical/
+
+# VS Code settings
+.vscode/
+
+check_anomaly.py
+check_solar.py
+clear_anomalies.py
+clear_historical.py
+remove_fake.py
+data/historical/*.csv

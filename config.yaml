@@ -1,0 +1,63 @@
+# Database
+database:
+  path: "energy.db"                    # SQLite file path (relative to project root)
+
+
+# Data sources
+smard:
+  base_url: "https://www.smard.de/app/chart_data"
+  region: "DE"
+  resolution: "hour"
+  request_timeout: 10                  # seconds before API call times out
+  sleep_between_requests: 1            # seconds to wait between consecutive calls
+
+  # SMARD filter codes for each metric
+  # These are the numeric IDs used in the SMARD API URL
+  filters:
+    wind_onshore: 410
+    solar: 4068
+    consumption: 410                   # update if your fetcher uses a different code
+
+# Historical data
+historical:
+  generation_csv: "data/historical/smard_generation_2025.csv"
+  consumption_csv: "data/historical/smard_consumption_2025.csv"
+
+# Anomaly detection
+anomaly:
+  sigma_threshold: 2.0                 # flag values outside mean ± N standard deviations
+  min_historical_rows: 30              # minimum rows needed to build a reliable baseline
+
+
+# Scheduler
+scheduler:
+  fetch_interval_minutes: 60           # how often to fetch live data (60 = hourly)
+  summary_hour: 8                      # hour of day (0-23) to generate daily AI summary
+                                       # 8 = generates every morning at 08:00
+
+# Metrics
+metrics:
+  names:
+    - wind_onshore
+    - solar
+    - consumption
+  labels:
+    wind_onshore: "Wind Onshore"
+    solar: "Solar"
+    consumption: "Consumption"
+  colors:
+    wind_onshore: "#4db8ff"
+    solar: "#ffcc00"
+    consumption: "#ff4444"
+
+# AI Summary (OpenAI)
+ai:
+  model: "gpt-4o-mini"                 # cost-efficient model, sufficient for summarisation
+  max_tokens: 300                      # keep summaries concise
+  temperature: 0.3                     # lower = more factual, less creative
+
+# Dashboard
+dashboard:
+  title: "Brandenburg Energy Monitor"
+  page_icon: "⚡"
+  anomaly_display_limit: 100           # max anomaly rows to load for display
