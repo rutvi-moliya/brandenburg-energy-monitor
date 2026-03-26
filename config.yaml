@@ -32,7 +32,7 @@ anomaly:
 # Scheduler
 scheduler:
   fetch_interval_minutes: 60           # how often to fetch live data (60 = hourly)
-  summary_hour: 8                      # hour of day (0-23) to generate daily AI summary
+  summary_hour: 14                      # hour of day (0-23) to generate daily AI summary
                                        # 8 = generates every morning at 08:00
 
 # Metrics
