@@ -104,7 +104,7 @@ def _check_and_generate_startup_summary() -> None:
     Returns:
         None
     """
-    time.sleep(5)  # Wait for scheduler and Streamlit to be fully started
+    time.sleep(90)  # Wait for scheduler and Streamlit to be fully started
 
     try:
         from ai_summary import load_latest_summary, create_and_save_summary

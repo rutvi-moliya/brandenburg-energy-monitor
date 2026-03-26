@@ -161,7 +161,7 @@ def save_anomaly(
         None
     """
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(DB_PATH, timeout=30)
         cursor = conn.cursor()
         detected_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
