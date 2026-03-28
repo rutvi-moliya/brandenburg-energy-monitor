@@ -98,20 +98,19 @@ def load_latest_summary() -> Optional[dict]:
         logger.error(f"Failed to load latest summary: {e}")
         return None
 
-
-# Statistics calculation
 def calculate_daily_stats(target_date: date) -> dict:
     """
     Calculate min, max, and average for each metric for a given date.
-    Only includes readings from that specific calendar date.
+    If fewer than 12 rows exist for target_date, uses the previous day.
 
     Args:
         target_date: The date to calculate statistics for.
 
     Returns:
-        Dictionary mapping metric name to its stats dict,
-        e.g. {'wind_onshore': {'avg': 8450, 'max': 12300, 'min': 4200}, ...}
+        Dictionary mapping metric name to its stats dict.
     """
+    from datetime import timedelta
+
     date_str = target_date.strftime("%Y-%m-%d")
     stats = {}
 
@@ -122,9 +121,18 @@ def calculate_daily_stats(target_date: date) -> dict:
             logger.warning(f"No data available for {metric}.")
             continue
 
-        # Filter to target date only
         df["date"] = pd.to_datetime(df["datetime"]).dt.date
         day_df = df[df["date"] == target_date]
+
+        # If fewer than 12 rows for today, fall back to yesterday
+        if len(day_df) < 12:
+            yesterday = target_date - timedelta(days=1)
+            day_df = df[df["date"] == yesterday]
+            if not day_df.empty:
+                logger.info(
+                    f"Only {len(df[df['date'] == target_date])} rows for {date_str}. "
+                    f"Using {yesterday} instead."
+                )
 
         if day_df.empty:
             logger.warning(f"No data for {metric} on {date_str}.")
@@ -155,7 +163,7 @@ def build_prompt(stats: dict, anomalies_today: pd.DataFrame) -> str:
     """
     today_str = date.today().strftime("%d %B %Y")
 
-    lines = [f"Here is today's ({today_str}) energy data for Germany:\n"]
+    lines = [f"Here is the latest available energy data for Germany (as of {today_str}):\n"]
 
     metric_labels = {
         "wind_onshore": "Wind Onshore",
