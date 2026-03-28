@@ -420,7 +420,7 @@ def render_anomaly_log() -> None:
 
     st.markdown(
         f"""
-        <div style="background:#0d1424;border-radius:10px;border:1px solid #1a2540;overflow:hidden;">
+        <div style="background:#0d1424;border-radius:10px;border:1px solid #1a2540;overflow:hidden;max-height:280px;overflow-y:auto;">
             <table style="width:100%;border-collapse:collapse;">
                 <thead>
                     <tr style="background:#0a0e1a;border-bottom:1px solid #1a2540;">
