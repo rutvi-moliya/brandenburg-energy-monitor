@@ -393,10 +393,9 @@ def render_anomaly_log() -> None:
     for col in ["Value (MW)", "Baseline Mean (MW)", "Std Dev (MW)"]:
         display_df[col] = display_df[col].round(1)
 
-    # Build styled HTML table
     rows_html = ""
     for _, row in display_df.iterrows():
-        metric = row["Metric"]
+        metric = str(row["Metric"])
         if metric == "Wind Onshore":
             metric_color = "#4db8ff"
         elif metric == "Solar":
@@ -404,24 +403,24 @@ def render_anomaly_log() -> None:
         else:
             metric_color = "#ff4444"
 
-        rows_html += f"""
-            <tr style="border-bottom:1px solid #1a2540;">
-                <td style="padding:10px 14px;color:#a0b0c8;">{row['Time']}</td>
-                <td style="padding:10px 14px;color:{metric_color};">{metric}</td>
-                <td style="padding:10px 14px;color:#ff4444;font-weight:700;">{row['Value (MW)']:,.1f}</td>
-                <td style="padding:10px 14px;color:#a0b0c8;">{row['Baseline Mean (MW)']:,.1f}</td>
-                <td style="padding:10px 14px;color:#a0b0c8;">{row['Std Dev (MW)']:,.1f}</td>
-                <td style="padding:10px 14px;color:#4a6080;font-size:11px;">{row['Detected At']}</td>
-            </tr>
-        """
+        value = f"{float(row['Value (MW)']):,.1f}"
+        mean = f"{float(row['Baseline Mean (MW)']):,.1f}"
+        std = f"{float(row['Std Dev (MW)']):,.1f}"
 
-    st.markdown(f"""
-        <div style="
-            background:#0d1424;
-            border-radius:10px;
-            border:1px solid #1a2540;
-            overflow:hidden;
-        ">
+        rows_html += (
+            f"<tr style='border-bottom:1px solid #1a2540;'>"
+            f"<td style='padding:10px 14px;color:#a0b0c8;'>{row['Time']}</td>"
+            f"<td style='padding:10px 14px;color:{metric_color};'>{metric}</td>"
+            f"<td style='padding:10px 14px;color:#ff4444;font-weight:700;'>{value}</td>"
+            f"<td style='padding:10px 14px;color:#a0b0c8;'>{mean}</td>"
+            f"<td style='padding:10px 14px;color:#a0b0c8;'>{std}</td>"
+            f"<td style='padding:10px 14px;color:#4a6080;font-size:11px;'>{row['Detected At']}</td>"
+            f"</tr>"
+        )
+
+    st.markdown(
+        f"""
+        <div style="background:#0d1424;border-radius:10px;border:1px solid #1a2540;overflow:hidden;">
             <table style="width:100%;border-collapse:collapse;">
                 <thead>
                     <tr style="background:#0a0e1a;border-bottom:1px solid #1a2540;">
@@ -433,12 +432,12 @@ def render_anomaly_log() -> None:
                         <th style="padding:10px 14px;text-align:left;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#4a6080;">Detected At</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {rows_html}
-                </tbody>
+                <tbody>{rows_html}</tbody>
             </table>
         </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True
+    )
 
     st.markdown(
         get_download_link(anomalies_df, "anomalies"),
