@@ -317,7 +317,6 @@ def render_data_summary(data: dict) -> None:
                     {get_download_link(df, metric)}
                 """, unsafe_allow_html=True)
 
-
 def render_ai_summary() -> None:
     """
     Render the AI-generated daily energy summary panel.
@@ -334,24 +333,52 @@ def render_ai_summary() -> None:
         st.markdown("""
             <div class="metric-card">
                 <div style="color:#4a6080;font-size:13px;text-align:center;padding:12px;">
-                    No summary generated yet. The AI summary runs daily at 08:00.
+                    No summary generated yet. The AI summary runs daily at 14:00.
                 </div>
             </div>
         """, unsafe_allow_html=True)
         return
 
     st.markdown(f"""
-        <div class="metric-card" style="text-align:left;padding:20px;">
-            <div style="font-size:14px;color:#e0e8ff;line-height:1.8;">
+        <div style="
+            background: linear-gradient(135deg, #0d1424 0%, #0a1628 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            border: 1px solid #1a2540;
+            border-left: 3px solid #4db8ff;
+            position: relative;
+        ">
+            <div style="
+                font-size: 11px;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                color: #4db8ff;
+                margin-bottom: 14px;
+                font-family: 'Courier New', monospace;
+            ">⚡ GPT-4o-mini Analysis</div>
+            <div style="
+                font-size: 14px;
+                color: #c8d8e8;
+                line-height: 1.9;
+                font-family: 'Courier New', monospace;
+                letter-spacing: 0.02em;
+            ">
                 {summary['summary_text']}
             </div>
-            <div style="font-size:10px;color:#4a6080;margin-top:12px;">
-                Generated: {summary['generated_at']} ·
-                Data date: {summary['summary_date']}
+            <div style="
+                font-size: 10px;
+                color: #2a3550;
+                margin-top: 16px;
+                font-family: 'Courier New', monospace;
+                letter-spacing: 0.08em;
+                border-top: 1px solid #1a2540;
+                padding-top: 10px;
+            ">
+                GENERATED: {summary['generated_at']} · DATA DATE: {summary['summary_date']}
             </div>
         </div>
     """, unsafe_allow_html=True)
-
+    
 def render_anomaly_log() -> None:
     """
     Render a table of all detected anomalies from the database.
